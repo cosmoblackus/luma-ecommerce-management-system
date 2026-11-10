@@ -4,7 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="LumaStore e-commerce management system" />
+  <meta name="theme-color" content="#263d34" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <title>LumaStore | Modern essentials</title>
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" href="./icons/icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -16,7 +22,7 @@
     <header class="site-header">
       <a href="#" class="brand" aria-label="LumaStore home"><span class="brand-mark">L</span><span>Luma<span>Store</span></span></a>
       <nav class="main-nav" aria-label="Primary"><button class="nav-link active" data-view="shop">Shop</button><button class="nav-link" data-view="admin">Admin</button></nav>
-      <div class="header-actions"><button class="icon-button" id="open-auth" aria-label="Admin sign in" title="Admin sign in">◉</button><button class="cart-button" id="open-cart" aria-label="Open cart">Bag <span id="cart-count">0</span></button></div>
+      <div class="header-actions"><button class="install-button" id="install-app" type="button" hidden>Install app</button><button class="icon-button" id="open-auth" aria-label="Admin sign in" title="Admin sign in">◉</button><button class="cart-button" id="open-cart" aria-label="Open cart">Bag <span id="cart-count">0</span></button></div>
     </header>
 
     <main>

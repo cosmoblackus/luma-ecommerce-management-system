@@ -11,12 +11,17 @@ const productSeed=[
 let products=[],orders=[],authenticated=false;
 let cart=JSON.parse(localStorage.getItem('luma-cart')||'[]');
 let activeCategory='All',editingId=null;
+let pendingInstallPrompt=null;
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const money=v=>`$${Number(v).toFixed(2)}`;
 const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const save=()=>localStorage.setItem('luma-cart',JSON.stringify(cart));
 const api=async(path,options={})=>{let response;try{response=await fetch(`/api/${path}`,{...options,credentials:'same-origin',headers:{'Content-Type':'application/json',...options.headers}})}catch{throw new Error('Cannot reach the backend. Start it using the local run instructions in README.md, then open http://127.0.0.1:8000.')}let result;try{result=await response.json()}catch{throw new Error('The backend is not available on this hosting URL. Use the full-stack Render URL or run the server locally.')}if(!response.ok)throw new Error(result.error||`Request failed (${response.status}).`);return result};
 const showApiError=error=>toast(error.message||'The request could not be completed.');
+window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();pendingInstallPrompt=event;$('#install-app').hidden=false});
+window.addEventListener('appinstalled',()=>{$('#install-app').hidden=true;pendingInstallPrompt=null;toast('LumaStore installed')});
+$('#install-app').addEventListener('click',async()=>{if(!pendingInstallPrompt)return;pendingInstallPrompt.prompt();await pendingInstallPrompt.userChoice;pendingInstallPrompt=null;$('#install-app').hidden=true});
+if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(error=>console.error('LumaStore offline support could not be enabled.',error)));
 async function initialize(){try{const state=await api('state');products=state.products;orders=state.orders;authenticated=state.authenticated;$('#backend-status').hidden=true;}catch(error){products=productSeed.map(product=>({...product}));orders=[];authenticated=false;$('#backend-status').hidden=false;$('#backend-status').textContent=`Backend unavailable. Showing the sample storefront; orders and admin changes won't be saved. ${error.message}`;}const adminLink=$('[data-view="admin"]'),authButton=$('#open-auth');adminLink.hidden=!authenticated;authButton.textContent=authenticated?'↪':'◉';authButton.setAttribute('aria-label',authenticated?'Sign out of admin':'Admin sign in');authButton.title=authenticated?'Sign out of admin':'Admin sign in';renderFilters();renderProducts();renderCart();renderOverview();renderAdminProducts();renderOrders()}
 function productArt(p,cl='product-art'){return `<div class="${cl}" style="background:${p.color||'#d5c9bb'}"><span class="${cl==='product-art'?'product-glyph':''}">${p.icon||'✦'}</span></div>`}
 function stars(r){return `<span class="rating">★★★★★</span> <span>${r}</span>`}

@@ -27,6 +27,10 @@ The root `render.yaml` Blueprint defines a free Python web service and does not 
 
 After the first successful deploy, Render assigns an HTTPS `onrender.com` address. That service serves both the storefront and API. GitHub Pages remains a static-only demo and cannot access the backend. A custom `name.com` address requires a domain that you own and configure separately.
 
+## Install on a phone or computer
+
+LumaStore is a progressive web app. Visit its HTTPS site in a supported browser and choose **Install app** when prompted. On iPhone or iPad, open the site in Safari, tap **Share**, then **Add to Home Screen**. The app shell can reopen offline after its first successful visit; product data, sign-in, and checkout still require the backend and an internet connection.
+
 ## Included API and safeguards
 
 - `GET /api/health` and `GET /api/state`

@@ -28,7 +28,17 @@ LOGIN_ATTEMPTS = {}
 LOGIN_ATTEMPTS_LOCK = threading.Lock()
 CATEGORIES = {"Home", "Accessories", "Wellness", "Office"}
 ORDER_STATUSES = {"Processing", "Shipped", "Delivered"}
-PUBLIC_FILES = {"index.html", "app.js", "styles.css"}
+PUBLIC_FILES = {
+    "index.html",
+    "app.js",
+    "styles.css",
+    "manifest.webmanifest",
+    "service-worker.js",
+    "icons/icon.svg",
+    "icons/icon-192.png",
+    "icons/icon-512.png",
+    "icons/apple-touch-icon.png",
+}
 
 try:
     import psycopg
@@ -367,11 +377,15 @@ class DemoHandler(BaseHTTPRequestHandler):
             return
         content = (ROOT / filename).read_bytes()
         content_type = mimetypes.guess_type(filename)[0] or "application/octet-stream"
+        if filename == "manifest.webmanifest":
+            content_type = "application/manifest+json"
         self.send_response(200)
         self.send_header("Content-Type", f"{content_type}; charset=utf-8")
         self.send_header("Content-Length", str(len(content)))
         self.send_header("X-Content-Type-Options", "nosniff")
-        self.send_header("Content-Security-Policy", "default-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self'; connect-src 'self'; img-src 'self' data:")
+        self.send_header("Content-Security-Policy", "default-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self'; connect-src 'self'; img-src 'self' data:; manifest-src 'self'; worker-src 'self'")
+        if filename == "service-worker.js":
+            self.send_header("Cache-Control", "no-cache")
         self.end_headers()
         self.wfile.write(content)
 
