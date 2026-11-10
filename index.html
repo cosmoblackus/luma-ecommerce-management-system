@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="LumaStore e-commerce management system" />
+  <title>LumaStore | Modern essentials</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app">
+    <header class="site-header">
+      <a href="#" class="brand" aria-label="LumaStore home"><span class="brand-mark">L</span><span>Luma<span>Store</span></span></a>
+      <nav class="main-nav" aria-label="Primary"><button class="nav-link active" data-view="shop">Shop</button><button class="nav-link" data-view="admin">Admin</button></nav>
+      <div class="header-actions"><button class="icon-button" id="open-auth" aria-label="Open account">◉</button><button class="cart-button" id="open-cart" aria-label="Open cart">Bag <span id="cart-count">0</span></button></div>
+    </header>
+
+    <main>
+      <section id="shop-view" class="view active">
+        <section class="hero">
+          <div class="hero-copy"><p class="eyebrow">Curated for everyday</p><h1>Small upgrades.<br /><em>Big feeling.</em></h1><p>Thoughtful essentials for the spaces, rituals and people you love.</p><button class="primary-button" id="shop-new">Shop new arrivals <span>→</span></button></div>
+          <div class="hero-art" aria-hidden="true"><div class="sun"></div><div class="arch arch-one"></div><div class="arch arch-two"></div><div class="pedestal"></div><div class="vase"><i></i><b></b></div><div class="leaf leaf-one"></div><div class="leaf leaf-two"></div></div>
+        </section>
+        <section class="catalogue section-wrap" id="catalogue">
+          <div class="section-heading"><div><p class="eyebrow">The collection</p><h2>Find your next favorite</h2></div><p id="result-count" class="muted"></p></div>
+          <div class="catalogue-tools">
+            <label class="search-wrap"><span>⌕</span><input id="search-input" type="search" placeholder="Search products" /></label>
+            <div class="filter-group" id="category-filters"></div>
+            <label class="select-wrap">Sort <select id="sort-select"><option value="featured">Featured</option><option value="price-low">Price: low to high</option><option value="price-high">Price: high to low</option><option value="rating">Best rated</option></select></label>
+          </div>
+          <div id="product-grid" class="product-grid"></div>
+        </section>
+      </section>
+
+      <section id="admin-view" class="view admin-view">
+        <aside class="admin-sidebar"><p class="admin-label">LumaStore</p><h2>Command<br />center.</h2><div class="admin-menu"><button class="admin-tab active" data-admin-panel="overview">▦ Overview</button><button class="admin-tab" data-admin-panel="products">□ Products</button><button class="admin-tab" data-admin-panel="orders">◫ Orders</button></div><button id="back-to-shop" class="back-button">← Back to store</button></aside>
+        <div class="admin-content">
+          <div id="overview-panel" class="admin-panel active"><div class="admin-topline"><div><p class="eyebrow">Performance</p><h1>Good morning, Ava.</h1></div><button class="secondary-button" id="admin-add-product">+ Add product</button></div><div id="summary-cards" class="summary-cards"></div><section class="chart-card"><div class="card-head"><div><h3>Sales overview</h3><p class="muted">Revenue over the last 7 days</p></div><strong id="revenue-total"></strong></div><div class="chart-legend"><span><i></i> Revenue</span><small>Mon - Sun</small></div><div id="sales-chart" class="sales-chart" aria-label="Sales chart"></div></section><section class="mini-grid"><div class="data-card"><div class="card-head"><h3>Top products</h3><button class="text-button" data-admin-panel="products">View all</button></div><div id="top-products"></div></div><div class="data-card"><div class="card-head"><h3>Recent orders</h3><button class="text-button" data-admin-panel="orders">View all</button></div><div id="recent-orders"></div></div></section></div>
+          <div id="products-panel" class="admin-panel"><div class="admin-topline"><div><p class="eyebrow">Inventory</p><h1>Products</h1></div><button class="secondary-button" id="products-add">+ Add product</button></div><div class="table-card"><div class="table-search"><input id="admin-product-search" placeholder="Search inventory" /></div><div class="table-scroll"><table><thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Status</th><th></th></tr></thead><tbody id="admin-products-table"></tbody></table></div></div></div>
+          <div id="orders-panel" class="admin-panel"><div class="admin-topline"><div><p class="eyebrow">Fulfilment</p><h1>Orders</h1></div><label class="select-wrap">Status <select id="order-filter"><option value="All">All orders</option><option>Processing</option><option>Shipped</option><option>Delivered</option></select></label></div><div class="table-card"><div class="table-scroll"><table><thead><tr><th>Order</th><th>Customer</th><th>Date</th><th>Total</th><th>Status</th></tr></thead><tbody id="orders-table"></tbody></table></div></div></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <aside id="cart-drawer" class="drawer" aria-label="Shopping cart"><div class="drawer-head"><h2>Your bag <span id="drawer-count"></span></h2><button class="close-button" data-close="cart-drawer">×</button></div><div id="cart-items" class="cart-items"></div><div class="drawer-footer"><div class="subtotal"><span>Subtotal</span><strong id="cart-subtotal">$0.00</strong></div><small>Shipping and taxes calculated at checkout.</small><button id="checkout-button" class="primary-button full">Secure checkout <span>→</span></button></div></aside>
+  <div id="modal-backdrop" class="modal-backdrop"></div>
+  <section id="product-modal" class="modal product-modal" aria-modal="true" role="dialog"></section>
+  <section id="auth-modal" class="modal small-modal" aria-modal="true" role="dialog"><button class="close-button modal-close" data-close="auth-modal">×</button><p class="eyebrow">Member access</p><h2>Welcome back</h2><p class="muted">Sign in to save favorites and track your orders.</p><form id="auth-form"><label>Email<input required type="email" placeholder="you@example.com" /></label><label>Password<input required minlength="6" type="password" placeholder="••••••••" /></label><button class="primary-button full">Sign in <span>→</span></button></form><p class="form-note">Demo mode: any valid email and 6+ character password works.</p></section>
+  <section id="checkout-modal" class="modal checkout-modal" aria-modal="true" role="dialog"><button class="close-button modal-close" data-close="checkout-modal">×</button><div id="checkout-form-wrap"><p class="eyebrow">Secure checkout</p><h2>Where should we send it?</h2><form id="checkout-form"><div class="form-row"><label>First name<input required name="firstName" /></label><label>Last name<input required name="lastName" /></label></div><label>Email<input required type="email" name="email" /></label><label>Address<input required minlength="8" name="address" placeholder="Street address" /></label><div class="form-row"><label>City<input required name="city" /></label><label>Postal code<input required pattern="[A-Za-z0-9 -]{3,10}" name="postal" /></label></div><label>Card number<input required inputmode="numeric" pattern="[0-9 ]{12,19}" name="card" placeholder="4242 4242 4242 4242" /></label><button class="primary-button full">Place order <span>→</span></button></form></div><div id="checkout-success" class="success-state hidden"><div class="success-mark">✓</div><p class="eyebrow">Order confirmed</p><h2>It’s on its way.</h2><p id="confirmation-text" class="muted"></p><button class="primary-button full" data-close="checkout-modal">Continue shopping <span>→</span></button></div></section>
+  <section id="product-form-modal" class="modal small-modal product-form" aria-modal="true" role="dialog"><button class="close-button modal-close" data-close="product-form-modal">×</button><p class="eyebrow" id="product-form-kicker">Inventory</p><h2 id="product-form-title">Add a product</h2><form id="product-form"><input type="hidden" name="id" /><label>Product name<input required name="name" maxlength="40" /></label><div class="form-row"><label>Category<select required name="category"><option>Home</option><option>Accessories</option><option>Wellness</option><option>Office</option></select></label><label>Price ($)<input required min="1" step="0.01" type="number" name="price" /></label></div><label>Stock<input required min="0" type="number" name="stock" /></label><label>Short description<textarea required minlength="12" name="description"></textarea></label><button class="primary-button full">Save product <span>→</span></button></form></section>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="app.js"></script>
+</body>
+</html>
