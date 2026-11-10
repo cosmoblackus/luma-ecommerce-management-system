@@ -1,6 +1,6 @@
 # LumaStore E-Commerce Management System
 
-LumaStore is a responsive storefront and admin demo built with HTML, CSS, vanilla JavaScript, a Python HTTP API, and SQLite locally or PostgreSQL in production. Product inventory, reviews, and demo orders are persisted; the shopping cart stays in the browser.
+LumaStore is a responsive storefront and admin demo built with HTML, CSS, vanilla JavaScript, a Python HTTP API, and SQLite. Product inventory, reviews, and demo orders are stored in the database; the shopping cart stays in the browser.
 
 ## Run locally
 
@@ -21,7 +21,9 @@ The server creates `data/lumastore.sqlite3` on first run and seeds the sample pr
 
 ## Deploy to Render
 
-The root `render.yaml` Blueprint defines a Python web service and a PostgreSQL database in Frankfurt. In Render, create a new Blueprint from this repository and provide a strong `ADMIN_PASSWORD` when prompted; Render generates the session-signing secret. Review the current plan and pricing shown in Render before confirming. The web service is on Render's free compute plan and can sleep when idle; the PostgreSQL database uses a paid persistent plan.
+The root `render.yaml` Blueprint defines a free Python web service and does not create any paid databases or other paid resources. In Render, create a Blueprint from this repository and provide a strong `ADMIN_PASSWORD` when prompted; Render generates the session-signing secret. The service uses SQLite and can sleep when idle.
+
+**Free hosting limitation:** Render's free web service has an ephemeral filesystem. SQLite data, including admin changes, reviews, and demo orders, can be erased when the service restarts or redeploys. The app seeds its sample catalog again when that happens. Do not rely on free SQLite hosting for durable inventory or customer orders.
 
 After the first successful deploy, Render assigns an HTTPS `onrender.com` address. That service serves both the storefront and API. GitHub Pages remains a static-only demo and cannot access the backend. A custom `name.com` address requires a domain that you own and configure separately.
 
@@ -40,4 +42,4 @@ Checkout is explicitly a demo: no payment, shipping address, card details, email
 1. Add products to the bag and place a demo order. The backend creates an order and decrements stock.
 2. Sign in to **Admin → Products**, create or edit an item, then refresh to confirm it persists.
 3. In **Admin → Orders**, update an order status and refresh to confirm it persists.
-4. Open a product and post a review. Its review and updated rating persist in the database.
+4. Open a product and post a review. Its review and updated rating are stored in the database. On the Render free service, these changes may be lost after a restart or redeploy.
