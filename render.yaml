@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: lumastore-cosmoblackus
+    runtime: python
+    plan: free
+    region: frankfurt
+    buildCommand: pip install -r requirements.txt
+    startCommand: python server.py
+    healthCheckPath: /api/health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: lumastore-db
+          property: connectionString
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: ADMIN_SESSION_SECRET
+        generateValue: true
+
+databases:
+  - name: lumastore-db
+    databaseName: lumastore
+    user: lumastore
+    plan: 0.1c-256mb
+    region: frankfurt
+    diskSizeGB: 1

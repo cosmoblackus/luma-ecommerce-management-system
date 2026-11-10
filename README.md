@@ -1,32 +1,43 @@
 # LumaStore E-Commerce Management System
 
-## Overview
+LumaStore is a responsive storefront and admin demo built with HTML, CSS, vanilla JavaScript, a Python HTTP API, and SQLite locally or PostgreSQL in production. Product inventory, reviews, and demo orders are persisted; the shopping cart stays in the browser.
 
-LumaStore is a responsive, frontend-only e-commerce project built for the Advanced Frontend Development e-commerce brief. It uses HTML5, CSS3 and vanilla JavaScript (ES6+) with Local Storage for persistence. No backend is required.
+## Run locally
 
-## Features
+1. Install Python 3.10 or later.
+2. Set a private admin password and session-signing secret in the same PowerShell window:
 
-- Customer storefront with responsive product catalogue, category filters, live search and sorting.
-- Individual product details, ratings, customer review entry and quick add-to-cart actions.
-- Cart drawer supporting quantity updates, item removal and price calculation.
-- Validated simulated checkout that creates a new order and confirmation state.
-- Demo customer sign-in interface with validation.
-- Admin command center with sales summary cards, CSS data chart, top-selling products and recent-order feed.
-- Admin product inventory tools: search, create, edit and delete products.
-- Order table with filtering and status updates.
-- Persisted products, cart and orders via `localStorage`.
+   ```powershell
+   $env:ADMIN_PASSWORD = "choose-a-strong-private-password"
+   $env:ADMIN_SESSION_SECRET = [guid]::NewGuid().ToString() + [guid]::NewGuid().ToString()
+   ```
 
-## Run the project
+3. From this folder, run the server:
+   - On the original Windows setup: `& "$env:LOCALAPPDATA\Programs\Python\Python312\python.exe" server.py`
+   - If Python is on your PATH: `python server.py`
+4. Open [http://127.0.0.1:8000](http://127.0.0.1:8000) and use **Admin sign in** to manage products and orders.
 
-Open `index.html` in a modern browser. An internet connection is only used to load the optional Google Fonts; all application functionality is contained in the project files.
+The server creates `data/lumastore.sqlite3` on first run and seeds the sample products and orders. Restarting the server preserves local data. Do not commit the password or session secret.
 
-## Test scenarios
+## Deploy to Render
 
-1. Add one or more products through the quick-add button, open **Bag**, change quantities and proceed through checkout using any valid form details (card number needs 12-19 digits/spaces).
-2. Open **Admin**, add or edit a product, then return to **Shop** to confirm the catalogue updates.
-3. In **Admin → Orders**, change an order status and verify the overview reflects the update.
-4. Refresh the browser: created products, cart contents and orders remain available.
+The root `render.yaml` Blueprint defines a Python web service and a PostgreSQL database in Frankfurt. In Render, create a new Blueprint from this repository and provide a strong `ADMIN_PASSWORD` when prompted; Render generates the session-signing secret. Review the current plan and pricing shown in Render before confirming. The web service is on Render's free compute plan and can sleep when idle; the PostgreSQL database uses a paid persistent plan.
 
-## Technologies
+After the first successful deploy, Render assigns an HTTPS `onrender.com` address. That service serves both the storefront and API. GitHub Pages remains a static-only demo and cannot access the backend. A custom `name.com` address requires a domain that you own and configure separately.
 
-Semantic HTML5, CSS Grid, Flexbox, responsive media queries, JavaScript ES6+, DOM manipulation, event delegation, form validation and Local Storage.
+## Included API and safeguards
+
+- `GET /api/health` and `GET /api/state`
+- Admin-authenticated product creation, edits, deletion, and order-status updates
+- Public product reviews and demo-order creation
+- HTTP-only, same-site admin session cookie; failed login attempts are rate limited
+- Public state responses omit order details unless the administrator is signed in
+
+Checkout is explicitly a demo: no payment, shipping address, card details, email address, or receipt is collected or processed. Do not use this app to accept real payments or customer orders without adding a payment provider, fulfillment flow, and operational safeguards.
+
+## Demo scenarios
+
+1. Add products to the bag and place a demo order. The backend creates an order and decrements stock.
+2. Sign in to **Admin → Products**, create or edit an item, then refresh to confirm it persists.
+3. In **Admin → Orders**, update an order status and refresh to confirm it persists.
+4. Open a product and post a review. Its review and updated rating persist in the database.
